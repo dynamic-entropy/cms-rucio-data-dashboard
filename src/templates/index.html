@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="bg-light m-3 p-3">
+    <a class="fs-2 fw-bold link-dark" href="/">
+        <img src="{{url_for('static', filename='cms_logo.png')}}" alt="" width="50" height="50" class="d-inline-block align-text-bottom">
+        CMS Rucio Data Dashboard
+    </a>
+    <p class="lead">Monitoring for data in Rucio Managed RSEs</p>
+    <!-- <hr class="my-4"> -->
+    <!-- <p>It uses utility classes for typography and spacing to space content out within the larger container.</p> -->
+    <!-- <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a> -->
+  </div>
+{% endblock %}
+
+{% block contents %}
+
+<div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">All Replicas table</h5>
+          <p class="card-text">View to explore containers, datasets and files at various RSE</p>
+          <a href="/rses/" class="btn btn-info">Go</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Search single DID</h5>
+          <p class="card-text">Get info about whereabout of a single DID</p>
+          <a href="did-rule-info" class="btn btn-info">Go</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

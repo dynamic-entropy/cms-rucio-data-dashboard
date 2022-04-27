@@ -29,7 +29,8 @@ layout = html.Div([
         page_action="native",
         page_current=0,
         page_size=10,
-        markdown_options = {'link_target': "_self"}
+        markdown_options = {'link_target': "_self"},
+        export_format="csv"
     ),
     # dcc.Graph(id="graph"), #M
 ])

@@ -12,10 +12,10 @@ class SQLStatements:
     get_dataset_replica_info = "select rse.rse, rep.available_replicas_cnt, rep.updated_at, rep.created_at from cms_rucio_prod.collection_replicas rep join cms_rucio_prod.rses rse on rep.rse_id = rse.id and rep.name='{0}'"
 
     def get_datasets_query(rse_id=None, filter_query=None, sort_by=None, paginate=None):
-        query = "select NAME ,BYTES ,LENGTH ,AVAILABLE_REPLICAS_CNT ,UPDATED_AT ,CREATED_AT from cms_rucio_prod.collection_replicas"
+        query = "select NAME ,BYTES ,LENGTH ,AVAILABLE_REPLICAS_CNT ,UPDATED_AT ,CREATED_AT, STATE from cms_rucio_prod.collection_replicas"
 
         if rse_id:
-            query += f" where rse_id='{rse_id}' and state='A'"
+            query += f" where rse_id='{rse_id}'"
         
         if rse_id and filter_query:
             m = match(r"{(.+)} s.+ (.+)", filter_query)
@@ -35,7 +35,7 @@ class SQLStatements:
 
 class ColumnNames:
     rse_table = ['rse_id', 'rse', 'used', 'files', 'updated_at', 'created_at']
-    dataset_table = ['name', 'bytes', 'length', 'available_replicas_cnt', 'updated_at', 'created_at']
+    dataset_table = ['name', 'bytes', 'length', 'available_replicas_cnt', 'updated_at', 'created_at', 'state']
     rules_table = ['id', 'account', 'name', 'did_type', 'state', 'rse_expression', 'copies', 'locked', 'activity', 'grouping', 'notification', 'priority', 'meta', 'updated_at', 'created_at']
     rules_on_did = ['id', 'account', 'rse_expression', 'activity', 'created_at', 'updated_at' ]
     file_replica_info = ['rse', 'updated_at', 'created_at']

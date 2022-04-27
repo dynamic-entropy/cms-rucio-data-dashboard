@@ -1,3 +1,38 @@
 #loading_rucio_datasets_list > #rucio_datasets_list{
     visibility: visible !important;
 }
+
+.export {
+    position: absolute;
+    /* right: 1%; */
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    /* padding: 16px 32px; */
+    text-align: center;
+    text-decoration: none;
+    /* display: block; */
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 8px;
+    position: relative;
+    
+}
+
+.export {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #4CAF50;
+}
+  
+.export:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.dash-spreadsheet-menu{
+    /* justify-content: right; */
+    float: right;
+}

@@ -9,28 +9,44 @@ from src.extensions import db
 
 layout = dcc.Loading(
     children= [
-    dash_table.DataTable(
-        id='rucio_datasets_list',
-        columns=[
-            {"name": i, "id": i, 'presentation': 'markdown'} 
-            if i == 'name' 
-            else 
-            {"name": i, "id": i,} 
-            for i in ColumnNames.dataset_table
-        ],
-        filter_action="custom",
-        filter_query="",
-        sort_action="custom",
-        sort_mode="single",
-        page_action="custom",
-        page_current=0,
-        page_size=10,
-        markdown_options = {'link_target': "_self"},
-        style_data = {
-        'whiteSpace': 'normal',
-        'height': 'auto',
-        }
-    ),  
+        dash_table.DataTable(
+            id='rucio_datasets_list',
+            columns=[
+                {"name": i, "id": i, 'presentation': 'markdown'} 
+                if i == 'name' 
+                else 
+                {"name": i, "id": i,} 
+                for i in ColumnNames.dataset_table
+            ],
+            filter_action="custom",
+            filter_query="",
+            sort_action="custom",
+            sort_mode="single",
+            page_action="custom",
+            page_current=0,
+            page_size=10,
+            export_format="csv",
+            markdown_options = {'link_target': "_self"},
+            style_data = {
+            'whiteSpace': 'normal',
+            'height': 'auto',
+            'backgroundColor': 'white'
+            },
+            style_data_conditional=[
+                {
+                    'if': {
+                        'filter_query': '{state} = "U"'
+                    },
+                    'backgroundColor': '#FFF4F4',
+                }
+            ],
+            style_header={
+                'color': 'black',
+                'fontWeight': 'bold',
+                'text-transform': 'uppercase'
+            }
+
+        ),  
     ],
     id='loading_rucio_datasets_list'
 )
@@ -60,7 +76,13 @@ def get_datasets_list(page_current, page_size, sort_by, filter_query, search):
         "psize": page_size
     }
 
+    print("rse_id", rse_id)
+    print("filter_query", filter_query)
+    print("sort_by", sort_by)
+    print("paginate", paginate)
+
     query = SQLStatements.get_datasets_query(rse_id, filter_query, sort_by, paginate)
+    print('query = ', query)
     datasets = db.session.execute(query)
         
     data = datasets.fetchall()

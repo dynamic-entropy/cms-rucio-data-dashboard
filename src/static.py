@@ -11,6 +11,8 @@ class SQLStatements:
     get_file_replica_info = "select rse.rse, rep.updated_at, rep.created_at from cms_rucio_prod.replicas rep join cms_rucio_prod.rses rse on rep.rse_id = rse.id and rep.name='{0}'"
     get_dataset_replica_info = "select rse.rse, rep.available_replicas_cnt, rep.updated_at, rep.created_at from cms_rucio_prod.collection_replicas rep join cms_rucio_prod.rses rse on rep.rse_id = rse.id and rep.name='{0}'"
 
+    get_usage_by_account = "select account, sum(bytes) as sum_bytes from CMS_RUCIO_PROD.account_usage where rse_id='{0}' and bytes != 0 group by account"
+
     def get_datasets_query(rse_id=None, filter_query=None, sort_by=None, paginate=None):
         query = "select NAME ,BYTES ,LENGTH ,AVAILABLE_REPLICAS_CNT ,UPDATED_AT ,CREATED_AT, STATE from cms_rucio_prod.collection_replicas"
 
@@ -40,3 +42,4 @@ class ColumnNames:
     rules_on_did = ['id', 'account', 'rse_expression', 'activity', 'created_at', 'updated_at' ]
     file_replica_info = ['rse', 'updated_at', 'created_at']
     dataset_replica_info = ['rse', 'available_replicas_cnt', 'updated_at', 'created_at']
+    usage_graph = ['account', 'sum_bytes']

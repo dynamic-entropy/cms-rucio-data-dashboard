@@ -1,3 +1,4 @@
+from ntpath import join
 import time
 from dash.dependencies import Input
 from dash.dependencies import Output
@@ -12,14 +13,14 @@ def register_callbacks(dashapp):
         Output("rules_on_file", "data"), 
         Output("rules_on_dataset", "data"),
         Output("rules_on_container", "data"),
+        Output("rules_on_children", "data"),
         Output("did_replica_info", "children"),
         Output("did_type", "children"),
         Output("did_type", 'className'),
         Input("did_input", "value")
     )
-    def input_triggers_spinner(did):
-        print(did)
-        rules_data = {"file": [], "dataset":[], "container": []}
+    def rules_on_did_family(did):
+        rules_data = {"file": [], "dataset":[], "container": [], "children": []}
         did_replica_info = ""
         class_name, children = "", ""
 
@@ -28,7 +29,6 @@ def register_callbacks(dashapp):
             children = html.Div(["DID Not Found:  ", html.B(did)])
             did_type = get_did_type(did)
             original_flag = True
-            print("did_type", did_type)
             if did_type:
                 class_name = 'badge bg-success'
                 children = f"DID Type: {did_type}"
@@ -37,7 +37,6 @@ def register_callbacks(dashapp):
                     did_replica_info = get_did_replica_info_table(did, did_type)
         
                     rules_data["file"] = get_rules_for_did(did)
-                    print("rules_data_file",  rules_data["file"])
                     did = get_parent_did(did)
                     did_type='D'
                     original_flag = False
@@ -45,16 +44,19 @@ def register_callbacks(dashapp):
                 if did and did_type == 'D':
                     if original_flag:
                         did_replica_info = get_did_replica_info_table(did, did_type)
+                        rules_data["children"] += get_rules_for_did(did, bulk=True)
+
                     rules_data["dataset"] = get_rules_for_did(did)
-                    print("rules_data_dataset",  rules_data["dataset"])
                     did = get_parent_did(did)
                     did_type='C'
                     original_flag = False
                 
                 if did and did_type == 'C':
+                    if original_flag:
+                        rules_data["children"] += get_rules_for_did(did, bulk=True)
+
                     while did:
-                        rules_data["container"] = get_rules_for_did(did) + rules_data["container"]
-                        print("rules_data_container",  len(rules_data["container"]))
+                        rules_data["container"] += get_rules_for_did(did)
                         did = get_parent_did(did)
 
 
@@ -63,11 +65,19 @@ def register_callbacks(dashapp):
                 rules_data[key] = pd.DataFrame([], columns=ColumnNames.rules_on_did).to_dict('records')
         
 
-        return rules_data["file"], rules_data["dataset"], rules_data["container"], did_replica_info, children, class_name
+        return rules_data["file"], rules_data["dataset"], rules_data["container"], rules_data["children"], did_replica_info, children, class_name
 
 
-def get_rules_for_did(did):
-    rules = db.session.execute(SQLStatements.get_rules_for_did.format(did))
+def get_rules_for_did(did, bulk=False):
+
+    if bulk:
+        child_dids = get_child_dids(did)
+        child_dids = [f"'{child_did[0]}'" for child_did in child_dids]
+        child_dids_string = ", ".join(child_dids)
+        rules = db.session.execute(SQLStatements.get_rules_for_did_bulk.format(child_dids_string))
+    else:
+        rules = db.session.execute(SQLStatements.get_rules_for_did.format(did))
+
     rules_data = rules.fetchall()
     rules_data_pd = pd.DataFrame(rules_data, columns=ColumnNames.rules_on_did)
 
@@ -83,9 +93,11 @@ def get_parent_did(did):
     did = db.session.execute(SQLStatements.get_parent_did.format(did)).fetchall()
     if did:
         did = did[0][0]
-    print("parent_did", did)
     return did
 
+def get_child_dids(did):
+    dids = db.session.execute(SQLStatements.get_child_did.format(did)).fetchall()
+    return dids
 
 def get_did_replica_info_table(did, did_type):
     if did_type == 'F':

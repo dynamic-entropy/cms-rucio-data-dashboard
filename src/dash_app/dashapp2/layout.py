@@ -22,7 +22,26 @@ def rules_on_did_table(title, id):
     
     return rule_table
 
+def rules_on_children_table(title, id):
+    rule_table = html.Div(
+        [
+            html.H5(title, className='mt-5 border-bottom text-secondary'),
+            dash_table.DataTable(
+                id=id,
+                columns=[
+                {"name": i, "id": i, "deletable":False, "selectable": True, 'presentation': 'markdown'} 
+                if i == 'id' 
+                else 
+                {"name": i, "id": i, "deletable":False, "selectable": True} 
+                for i in ColumnNames.rules_on_children
+                ],
+            )
+        ]
+    )
+    
+    return rule_table
 
+    
 layout = html.Div(
     children=[
         header.layout,
@@ -47,7 +66,7 @@ layout = html.Div(
                                 ("Rules on dataset", "rules_on_dataset"),
                                 ("Rules on container", "rules_on_container")
                             ]
-                        ]
+                        ] + [ rules_on_children_table("Rules on DID Children", "rules_on_children")]
                     )
                 ),                
             ]

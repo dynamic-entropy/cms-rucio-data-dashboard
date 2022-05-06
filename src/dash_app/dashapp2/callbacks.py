@@ -72,7 +72,7 @@ def get_rules_for_did(did, bulk=False):
 
     if bulk:
         child_dids = get_child_dids(did)
-        child_dids = [f"'{child_did[0]}'" for child_did in child_dids]
+        child_dids = [f"('{child_did[0]}', {0})" for child_did in child_dids]
         child_dids_string = ", ".join(child_dids)
         rules = db.session.execute(SQLStatements.get_rules_for_did_bulk.format(child_dids_string))
     else:

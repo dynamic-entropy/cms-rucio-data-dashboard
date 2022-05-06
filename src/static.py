@@ -7,7 +7,7 @@ class SQLStatements:
     get_rules = "select ID ,ACCOUNT ,NAME ,DID_TYPE ,STATE ,RSE_EXPRESSION ,COPIES ,LOCKED ,ACTIVITY ,GROUPING ,NOTIFICATION ,PRIORITY ,META ,UPDATED_AT ,CREATED_AT  from cms_rucio_prod.rules where name='{0}'"
     get_did_type = "select did_type from CMS_RUCIO_PROD.dids where name='{0}'"
     get_rules_for_did = "select name, id, account, rse_expression, activity, created_at, updated_at from cms_rucio_prod.rules where name='{0}'"
-    get_rules_for_did_bulk = "select name, id, account, rse_expression, activity, created_at, updated_at from cms_rucio_prod.rules where name in ({0})"
+    get_rules_for_did_bulk = "select name, id, account, rse_expression, activity, created_at, updated_at from cms_rucio_prod.rules where (name, 0) in ({0})"
     get_parent_did = "select name from cms_rucio_prod.contents where child_name='{0}'"
     get_child_did = "select child_name from cms_rucio_prod.contents where name='{0}'"
     get_file_replica_info = "select rse.rse, rep.updated_at, rep.created_at from cms_rucio_prod.replicas rep join cms_rucio_prod.rses rse on rep.rse_id = rse.id and rep.name='{0}'"

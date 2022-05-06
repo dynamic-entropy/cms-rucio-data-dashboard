@@ -16,6 +16,14 @@ def rules_on_did_table(title, id):
                 {"name": i, "id": i, "deletable":False, "selectable": True} 
                 for i in ColumnNames.rules_on_did
                 ],
+                filter_action="native",
+                sort_action="native",
+                sort_mode="multi",
+                page_action="native",
+                page_current=0,
+                page_size=10,
+                markdown_options = {'link_target': "_self"},
+                export_format="csv"
             )
         ]
     )
@@ -35,6 +43,14 @@ def rules_on_children_table(title, id):
                 {"name": i, "id": i, "deletable":False, "selectable": True} 
                 for i in ColumnNames.rules_on_children
                 ],
+                filter_action="native",
+                sort_action="native",
+                sort_mode="multi",
+                page_action="native",
+                page_current=0,
+                page_size=10,
+                markdown_options = {'link_target': "_self"},
+                export_format="csv"
             )
         ]
     )
